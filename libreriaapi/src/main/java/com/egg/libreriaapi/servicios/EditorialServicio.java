@@ -3,6 +3,7 @@ package com.egg.libreriaapi.servicios;
 import com.egg.libreriaapi.entidades.Autor;
 import com.egg.libreriaapi.entidades.Editorial;
 import com.egg.libreriaapi.excepciones.MyException;
+import com.egg.libreriaapi.modelos.EditorialDeleteDTO;
 import com.egg.libreriaapi.repositorios.AutorRepositorio;
 import com.egg.libreriaapi.repositorios.EditorialRepositorio;
 import jakarta.transaction.Transactional;
@@ -54,6 +55,10 @@ public class EditorialServicio {
 
     }
 
+    public Editorial getOne(UUID id){
+        return editorialRepositorio.getOne(id);
+    }
+
     @Transactional
     public void modificarEditorial(String nombre, UUID id) {
         Optional<Editorial> respuesta = editorialRepositorio.findById(id);
@@ -73,6 +78,20 @@ public class EditorialServicio {
 
     public List<Editorial> listarEditorialesInactivas() {
         return editorialRepositorio.findByEditorialActivaFalse();
+    }
+
+
+    public EditorialDeleteDTO eliminarEditorial(UUID id) {
+        Editorial editorial = getOne(id);
+        editorial.setEditorialActiva(false);
+        editorialRepositorio.save(editorial);
+
+        EditorialDeleteDTO dto = new EditorialDeleteDTO();
+        dto.setId(editorial.getId());
+        dto.setNombre(editorial.getNombre());
+        dto.setEditorialActiva(editorial.isEditorialActiva());
+
+        return dto;
     }
 
     private void validar(String nombre) throws MyException {

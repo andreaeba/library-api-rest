@@ -3,6 +3,7 @@ package com.egg.libreriaapi.controladores;
 import com.egg.libreriaapi.entidades.Autor;
 import com.egg.libreriaapi.entidades.Editorial;
 import com.egg.libreriaapi.excepciones.MyException;
+import com.egg.libreriaapi.modelos.EditorialDeleteDTO;
 import com.egg.libreriaapi.servicios.EditorialServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,6 +68,16 @@ public class EditorialControlador {
             return new ResponseEntity<>(editoriales, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<EditorialDeleteDTO> eliminarEditorial(@PathVariable UUID id) {
+        try {
+            EditorialDeleteDTO dto = editorialServicio.eliminarEditorial(id);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
